@@ -13,6 +13,7 @@ const port = config.express.port;
 const options = {
   root: __dirname + "/views", // __dirname: current directory
 };
+let usernames = [];
 
 // Middlewares
 // ---
@@ -54,12 +55,27 @@ io.on("connection", (socket) => {
   // io.emit('broadcast', /* … */); // emit an event to all connected sockets
   // socket.on('reply', () => { /* … */ }); // listen to the event
   console.log(`User ${socket.id} connected`);
-  setTimeout(() => {
-    socket.emit("hi", "Server says hi!"); // to client
-  }, 1000);
-  socket.on("hi", (msg) => {
-    // from client
-    console.log(msg + socket.id);
+  // Assign a user name
+  // Receive user name from client
+  socket.on("setUsername", (usernameWanted) => {
+    // String trim
+    usernameWanted = usernameWanted.trim();
+    // Test if the name is not used yet
+    let usernameTaken = false;
+    usernames.map((username) => {
+      if (username === usernameWanted) {
+        usernameTaken = true;
+      }
+    });
+    // Assign or reject
+    if (usernameTaken) {
+      // console.log("rejected");
+      socket.emit("rejectUsername", usernameWanted);
+    } else {
+      // console.log("accepted");
+      usernames.push(usernameWanted);
+      socket.emit("acceptUsername", usernameWanted);
+    }
   });
   // User disconected
   socket.on("disconnect", () => {
@@ -74,5 +90,5 @@ io.on("connection", (socket) => {
 // This method is identical to Node’s http.Server.listen().
 // To use Socket IO we need to replace app by server
 server.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });

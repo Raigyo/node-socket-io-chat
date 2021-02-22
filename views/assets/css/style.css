@@ -548,3 +548,7 @@ body.modal-active {
     opacity: 0;
   }
 }
+
+.hidden {
+  visibility: hidden;
+}

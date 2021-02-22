@@ -6,13 +6,15 @@ const io = require("socket.io")(server);
 const morgan = require("morgan");
 const config = require("./config");
 
-// Global variables
+// Const
 // ---
 const port = config.express.port;
 // Default path for sendFile
 const options = {
   root: __dirname + "/views", // __dirname: current directory
 };
+// Global variables
+// ---
 let usernames = [];
 
 // Middlewares
@@ -62,24 +64,34 @@ io.on("connection", (socket) => {
     usernameWanted = usernameWanted.trim();
     // Test if the name is not used yet
     let usernameTaken = false;
-    usernames.map((username) => {
-      if (username === usernameWanted) {
-        usernameTaken = true;
-      }
-    });
-    // Assign or reject
-    if (usernameTaken) {
-      // console.log("rejected");
-      socket.emit("rejectUsername", usernameWanted);
-    } else {
-      // console.log("accepted");
-      usernames.push(usernameWanted);
-      socket.emit("acceptUsername", usernameWanted);
+    for (let socketid in usernames) {
+      console.log("user exists ", socketid, "--", usernames[socketid]);
+      if (usernames[socketid] == usernameWanted) usernameTaken = true;
     }
+
+    // Fake loading time
+    let timeFakeLoading = 1000;
+    setTimeout(() => {
+      // Final check
+      if (usernameTaken) {
+        socket.emit("rejectUsername", usernameWanted);
+      } else {
+        //socket.join("users", () => {
+        usernames[socket.id] = usernameWanted;
+        socket.emit("acceptUsername", usernameWanted);
+        //});
+      }
+    }, timeFakeLoading);
   });
+
   // User disconected
   socket.on("disconnect", () => {
     console.log(`User ${socket.id} disconnected`);
+    // We delete the username from array
+    if (usernames[socket.id]) {
+      console.log(`Username ${usernames[socket.id]} deleted`);
+      delete usernames[socket.id];
+    }
   });
 });
 

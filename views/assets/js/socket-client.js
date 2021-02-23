@@ -4,7 +4,8 @@ const socket = io();
 let formUsername = document.body.querySelector("#formUsername"),
   inputUsername = formUsername.querySelector("#inputUsername"),
   loaderUsername = formUsername.querySelector("#loaderUsername"),
-  username;
+  username,
+  allUsers;
 
 // Send username to server
 formUsername.addEventListener("submit", (event) => {
@@ -18,8 +19,10 @@ formUsername.addEventListener("submit", (event) => {
 });
 
 // Receive answer from server according user name acceptance
-socket.on("acceptUsername", (_username) => {
+socket.on("acceptUsername", (_username, _allUsers) => {
   username = _username;
+  allUsers = _allUsers;
+  console.log("allUsers: ", allUsers);
   closeModal();
 });
 socket.on("rejectUsername", (_username) => {

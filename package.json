@@ -1,20 +1,20 @@
 {
-  "name": "node-socket-io",
+  "name": "Socket.io",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^3.1.1"
+    "express": "^4.16.3",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.7"
+    "morgan": "^1.9.1"
   }
 }

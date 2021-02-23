@@ -549,6 +549,64 @@ body.modal-active {
   }
 }
 
+/* List Modal */
+
+.listModal {
+  display: block;
+  width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.listModal li {
+  line-height: 2;
+  font-size: 20px;
+}
+
+
+/* Close Icon */
+
+.closeIcon {
+  position: absolute;
+  right: 32px;
+  top: 32px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+.closeIcon:hover {
+  opacity: 1;
+}
+
+.closeIcon:before,
+.closeIcon:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #fff;
+}
+
+.closeIcon:before {
+  transform: rotate(45deg);
+}
+
+.closeIcon:after {
+  transform: rotate(-45deg);
+}
+
+/* Global */
+
 .hidden {
   visibility: hidden;
+}
+
+.none {
+  display: none !important;
 }

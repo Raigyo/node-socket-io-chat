@@ -76,15 +76,18 @@ io.on("connection", (socket) => {
       if (usernameTaken) {
         socket.emit("rejectUsername", usernameWanted);
       } else {
-        //socket.join("users", () => {
-        usernames[socket.id] = usernameWanted;
-        socket.emit("acceptUsername", usernameWanted);
-        //});
+        // Users = users authenticated in the chat
+        socket.join("users", () => {
+          usernames[socket.id] = usernameWanted;
+          socket.emit("acceptUsername", usernameWanted, getUsernames());
+        });
       }
     }, timeFakeLoading);
   });
 
   // User disconected
+  // Upon disconnection, sockets leave all the channels they were part of automatically,
+  // and no special teardown is needed on your part.
   socket.on("disconnect", () => {
     console.log(`User ${socket.id} disconnected`);
     // We delete the username from array
@@ -104,3 +107,13 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
+
+// Array with usernames without index
+
+const getUsernames = () => {
+  let users = []; // array with usernames only
+  for (let socketid in usernames) {
+    users.push(usernames[socketid]);
+  }
+  return users;
+};

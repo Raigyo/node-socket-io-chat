@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
     let usernameTaken = false;
     for (let socketid in usernames) {
       console.log("user exists ", socketid, "--", usernames[socketid]);
-      if (usernames[socketid] == usernameWanted) usernameTaken = true;
+      if (usernames[socketid] === usernameWanted) usernameTaken = true;
     }
 
     // Fake loading time
@@ -79,7 +79,14 @@ io.on("connection", (socket) => {
         // Users = users authenticated in the chat
         socket.join("users", () => {
           usernames[socket.id] = usernameWanted;
-          socket.emit("acceptUsername", usernameWanted, getUsernames());
+          let justUsernames = getUsernames();
+          socket.emit("acceptUsername", usernameWanted, justUsernames);
+          // when a new user enter a room:
+          // socket.broadcast.emit("new user connected")
+          // we don't use broadcast because it sends te event to all sockets excepted sender
+          // but we need to send event only to the users already identified
+          // so we make a broadcast using room name
+          socket.to("users").emit("newUser", usernameWanted, justUsernames);
         });
       }
     }, timeFakeLoading);
@@ -93,6 +100,8 @@ io.on("connection", (socket) => {
     // We delete the username from array
     if (usernames[socket.id]) {
       console.log(`Username ${usernames[socket.id]} deleted`);
+      // socket.to('users').emit('leftUser', getUsernames())
+      socket.to("users").emit("leftUser", usernames[socket.id], getUsernames());
       delete usernames[socket.id];
     }
   });

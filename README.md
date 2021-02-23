@@ -6,6 +6,8 @@
 
 ![Node / Socket IO Logo](_readme-img/node-socket.png)
 
+// TODO msg when disconecting
+
 ## Dependancies
 
 [socket.io](https://www.npmjs.com/package/socket.io): Socket.IO enables real-time bidirectional event-based communication.

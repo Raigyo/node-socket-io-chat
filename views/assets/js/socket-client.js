@@ -24,6 +24,7 @@ socket.on("acceptUsername", (_username, _allUsers) => {
   allUsers = _allUsers;
   console.log("allUsers: ", allUsers);
   closeModal();
+  updateUsers(allUsers);
 });
 socket.on("rejectUsername", (_username) => {
   inputUsername.value = "";
@@ -34,4 +35,20 @@ socket.on("rejectUsername", (_username) => {
   // Loader switch
   inputUsername.classList.remove("hidden");
   loaderUsername.classList.add("hidden");
+});
+
+// Users in chat update
+socket.on("newUser", (newUsername, _allUsers) => {
+  allUsers = _allUsers;
+  updateUsers(allUsers);
+  // msg displayed to other users when connecting
+  messageNewUser(newUsername);
+});
+socket.on("leftUser", (leaveUsername, _allUsers) => {
+  allUsers = _allUsers;
+  updateUsers(allUsers);
+  console.log("leaveUsername ", leaveUsername);
+  console.log("_allUsers ", _allUsers);
+  // msg displayed to other users leaving
+  messageLeaveUser(leaveUsername);
 });

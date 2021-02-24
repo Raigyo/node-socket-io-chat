@@ -18,7 +18,7 @@
     <div id="contentUsername" class="modal-background">
         <form class="modal" id="formUsername" method="post">
             <h2>Choisis un username</h2>
-            <input autocomplete="off" id="inputUsername" name="username"  type="text">
+            <input autofocus autocomplete="off" id="inputUsername" name="username"  type="text">
             <div class="loader hidden" id="loaderUsername"></div>
         </form>
     </div>
@@ -229,8 +229,8 @@
                 </div>
             </div>
             <div class="write">
-                <input type="text" />
-                <a href="javascript:;" class="write-link send"></a>
+                <input id="inputMessage" type="text" />
+                <a href="javascript:;" class="write-link send" onclick="sendMessage()"></a>
             </div>
         </div>
     </div>
@@ -239,38 +239,6 @@
 <script src="assets/js/index.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script  src="assets/js/socket-client.js"></script>
-<!-- <script>
-
-const socket = io();
-
-// Variables globales
-let formUsername = document.body.querySelector('#formUsername'),
-    inputUsername = formUsername.querySelector('#inputUsername'),
-    loaderUsername = formUsername.querySelector('#loaderUsername'),
-    username
-
-// Envoie de l'username souhaité
-formUsername.addEventListener('submit', (event) => {
-    event.preventDefault()
-    let usernameWanted = inputUsername.value
-    socket.emit('setUsername', usernameWanted)
-    inputUsername.classList.add('hidden')
-    loaderUsername.classList.remove('hidden')
-})
-
-// Réponses concernant l'assignation de l'username
-socket.on('acceptUsername', (_username) => {
-    username = _username
-    closeModal()
-})
-socket.on('rejectUsername', (_username) => {
-    inputUsername.value = ''
-    inputUsername.setAttribute('placeholder', "L'username "+_username+" est déjà pris !")
-    inputUsername.classList.remove('hidden')
-    loaderUsername.classList.add('hidden')
-})
-  
-</script> -->
 
 </body>
 

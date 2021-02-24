@@ -94,10 +94,23 @@ const messageNewUser = (newUsername) => {
   chat.container.querySelector(".chat[data-chat=person0]").innerHTML += message;
 };
 
+// msg
+
+let globalChat = chat.container.querySelector(".chat[data-chat=person0]");
+
 // msg when a new user is connecting
 const messageLeaveUser = (leaveUsername) => {
   let message = `<div class="conversation-start">
                   <span>${leaveUsername} a quitté le chat!</span>
                 </div>`;
-  chat.container.querySelector(".chat[data-chat=person0]").innerHTML += message;
+  // globalChat.innerHTML += message; // reload all dom
+  // use instead:
+  globalChat.insertAdjacentHTML("beforeend", message); // add in dom
+};
+
+// display msg of current user
+const showMyMessage = (text) => {
+  console.log("text", text);
+  let message = `<div class="bubble me">${text}</div>`;
+  globalChat.insertAdjacentHTML("beforeend", message);
 };

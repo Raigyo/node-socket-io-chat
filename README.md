@@ -63,3 +63,4 @@ http.listen(3000, () => {
 ## Useful links
 - [Express](https://expressjs.com/)
 - [SOCKET.IO](https://socket.io/)
+- [element.insertAdjacentHTML]https://developer.mozilla.org/fr/docs/Web/API/Element/insertAdjacentHTML)

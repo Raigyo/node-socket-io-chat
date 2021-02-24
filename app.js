@@ -85,11 +85,21 @@ io.on("connection", (socket) => {
           // socket.broadcast.emit("new user connected")
           // we don't use broadcast because it sends te event to all sockets excepted sender
           // but we need to send event only to the users already identified
-          // so we make a broadcast using room name
+          // so we make a broadcast using room name and send a connection message
+          // to all other users and update the list of users in chat
           socket.to("users").emit("newUser", usernameWanted, justUsernames);
         });
       }
     }, timeFakeLoading);
+  });
+
+  // Receive / broadcast a msg
+  socket.on("sendMessage", (text) => {
+    text.trim();
+    if (text !== "") {
+      socket.to("users").emit("newMessage", text); // send msg to room
+      socket.emit("confirmMessage", text); // send msg to sender to manage bubble
+    }
   });
 
   // User disconected
@@ -102,6 +112,7 @@ io.on("connection", (socket) => {
       console.log(`Username ${usernames[socket.id]} deleted`);
       let userLeaving = usernames[socket.id];
       delete usernames[socket.id];
+      // we send a leaving message to all user and update the list of users in chat
       socket.to("users").emit("leftUser", userLeaving, getUsernames());
     }
   });

@@ -4,6 +4,7 @@ const socket = io();
 let formUsername = document.body.querySelector("#formUsername"),
   inputUsername = formUsername.querySelector("#inputUsername"),
   loaderUsername = formUsername.querySelector("#loaderUsername"),
+  inputMessage = document.body.querySelector("#inputMessage"),
   username,
   allUsers;
 
@@ -17,6 +18,21 @@ formUsername.addEventListener("submit", (event) => {
   inputUsername.classList.add("hidden");
   loaderUsername.classList.remove("hidden");
 });
+
+// Send a msg
+inputMessage.addEventListener("keydown", (event) => {
+  if (event.keyCode === 13) {
+    sendMessage();
+  }
+});
+
+const sendMessage = () => {
+  let text = inputMessage.value.trim();
+  if (text !== "") {
+    socket.emit("sendMessage", text);
+    inputMessage.value = "";
+  }
+};
 
 // Receive answer from server according user name acceptance
 socket.on("acceptUsername", (_username, _allUsers) => {
@@ -52,3 +68,6 @@ socket.on("leftUser", (leaveUsername, _allUsers) => {
   // msg displayed to other users leaving
   messageLeaveUser(leaveUsername);
 });
+
+// display msg
+socket.on("confirmMessage", (text) => showMyMessage(text));

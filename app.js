@@ -4,6 +4,7 @@ const app = require("express")();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const morgan = require("morgan");
+const striptags = require("striptags");
 const config = require("./config");
 
 // Const
@@ -61,7 +62,7 @@ io.on("connection", (socket) => {
   // Receive user name from client
   socket.on("setUsername", (usernameWanted) => {
     // String trim
-    usernameWanted = usernameWanted.trim();
+    usernameWanted = striptags(usernameWanted.trim());
     // Test if the name is not used yet
     let usernameTaken = false;
     for (let socketid in usernames) {
@@ -95,11 +96,19 @@ io.on("connection", (socket) => {
 
   // Receive / broadcast a msg
   socket.on("sendMessage", (text) => {
-    text.trim();
+    text = striptags(text.trim());
     if (text !== "") {
-      socket.to("users").emit("newMessage", text); // send msg to room
-      socket.emit("confirmMessage", text); // send msg to sender to manage bubble
+      socket.to("users").emit("newMessage", text, usernames[socket.id]); // send msg to room + sender name
+      socket.emit("confirmMessage", text); // send msg to sender to manage bubble class
     }
+  });
+
+  // Informations about msg writing
+  socket.on("startWriting", () => {
+    socket.to("users").emit("userStartWriting", usernames[socket.id]);
+  });
+  socket.on("stopWriting", () => {
+    socket.to("users").emit("userStopWriting");
   });
 
   // User disconected

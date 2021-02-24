@@ -6,7 +6,9 @@
 
 ![Node / Socket IO Logo](_readme-img/node-socket.png)
 
-// TODO msg when disconecting
+Demo on [Heroku](https://raigyo-socket-chat.herokuapp.com/) (WIP!!!)
+
+// TODO "user xxx is writing" for all users
 
 ## Dependancies
 
@@ -49,6 +51,10 @@ http.listen(3000, () => {
   var socket = io(); // link between client and server
 </script>
 ````
+
+[striptags](https://www.npmjs.com/package/striptags): Strip HTML tags from a string.
+
+`npm i striptags`
 
 ## Dev Dependancies
 

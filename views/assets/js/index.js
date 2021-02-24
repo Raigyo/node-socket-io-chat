@@ -110,7 +110,27 @@ const messageLeaveUser = (leaveUsername) => {
 
 // display msg of current user
 const showMyMessage = (text) => {
-  console.log("text", text);
-  let message = `<div class="bubble me">${text}</div>`;
+  let message = `<div class="bubble name me">${text}</div>`;
   globalChat.insertAdjacentHTML("beforeend", message);
+};
+
+// display msg of other users
+const showNewMessage = (text, usernameSender) => {
+  let message = `<div class="bubble name you"><span class="username">${usernameSender}</span>${text}</div>`;
+  globalChat.insertAdjacentHTML("beforeend", message);
+};
+
+// Writing information
+let someoneWriting = document.body.querySelector(".someoneWriting");
+// Display info msg about writing
+const showSomeoneWriting = (usernameWriting) => {
+  if (chat.person === "person0" || chat.person === null) {
+    someoneWriting.innerHTML = `${usernameWriting} est en train d\'écrire...`;
+    someoneWriting.classList.remove("none");
+  }
+};
+
+// Display info msg about writing
+const removeSomeoneWriting = () => {
+  someoneWriting.classList.add("none");
 };

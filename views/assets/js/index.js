@@ -97,7 +97,7 @@ const messageNewUser = (newUsername) => {
 // msg when a new user is connecting
 const messageLeaveUser = (leaveUsername) => {
   let message = `<div class="conversation-start">
-                  <span>${leaveUsername} a rejoint le chat!</span>
+                  <span>${leaveUsername} a quitté le chat!</span>
                 </div>`;
   chat.container.querySelector(".chat[data-chat=person0]").innerHTML += message;
 };

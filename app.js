@@ -100,9 +100,9 @@ io.on("connection", (socket) => {
     // We delete the username from array
     if (usernames[socket.id]) {
       console.log(`Username ${usernames[socket.id]} deleted`);
-      // socket.to('users').emit('leftUser', getUsernames())
-      socket.to("users").emit("leftUser", usernames[socket.id], getUsernames());
+      let userLeaving = usernames[socket.id];
       delete usernames[socket.id];
+      socket.to("users").emit("leftUser", userLeaving, getUsernames());
     }
   });
 });

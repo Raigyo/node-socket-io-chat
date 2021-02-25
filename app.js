@@ -1,3 +1,5 @@
+// Script component managing server configuration and sockets
+
 // Modules
 // ---
 const app = require("express")();
@@ -81,14 +83,21 @@ io.on("connection", (socket) => {
         socket.join("users", () => {
           usernames[socket.id] = usernameWanted;
           let justUsernames = getUsernames();
-          socket.emit("acceptUsername", usernameWanted, justUsernames);
+          socket.emit(
+            "acceptUsername",
+            usernameWanted,
+            justUsernames,
+            getSocketIDs()
+          );
           // when a new user enter a room:
           // socket.broadcast.emit("new user connected")
           // we don't use broadcast because it sends te event to all sockets excepted sender
           // but we need to send event only to the users already identified
           // so we make a broadcast using room name and send a connection message
           // to all other users and update the list of users in chat
-          socket.to("users").emit("newUser", usernameWanted, justUsernames);
+          socket
+            .to("users")
+            .emit("newUser", usernameWanted, socket.id, justUsernames);
         });
       }
     }, timeFakeLoading);
@@ -145,4 +154,14 @@ const getUsernames = () => {
     users.push(usernames[socketid]);
   }
   return users;
+};
+
+// Array with socketIDs without index
+
+const getSocketIDs = () => {
+  let socketIDs = [];
+  for (let socketid in usernames) {
+    socketIDs.push(socketid);
+  }
+  return socketIDs;
 };

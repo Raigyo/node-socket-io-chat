@@ -1,3 +1,5 @@
+// Script component managing client sockets
+
 const socket = io();
 
 // Global var
@@ -57,12 +59,13 @@ const sendMessage = () => {
 };
 
 // Receive answer from server according user name acceptance
-socket.on("acceptUsername", (_username, _allUsers) => {
+socket.on("acceptUsername", (_username, _allUsers, allSocketIDs) => {
   username = _username;
   allUsers = _allUsers;
   closeModal();
   updateUsers(allUsers);
   currentUserWelcome.textContent = `Bienvenue ${_username}!`;
+  setFriends(allUsers, allSocketIDs, username);
 });
 socket.on("rejectUsername", (_username) => {
   inputUsername.value = "";
@@ -76,11 +79,12 @@ socket.on("rejectUsername", (_username) => {
 });
 
 // Users in chat update
-socket.on("newUser", (newUsername, _allUsers) => {
+socket.on("newUser", (newUsername, newSocketID, _allUsers) => {
   allUsers = _allUsers;
   updateUsers(allUsers);
   // msg displayed to other users when connecting
   messageNewUser(newUsername);
+  addUserChat(newUsername, newSocketID);
 });
 socket.on("leftUser", (leaveUsername, _allUsers) => {
   allUsers = _allUsers;

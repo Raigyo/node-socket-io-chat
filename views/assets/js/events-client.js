@@ -1,3 +1,5 @@
+// Script component managing client events and displaying
+
 document.querySelector(".chat[data-chat=person0]").classList.add("active-chat");
 document.querySelector(".person[data-chat=person0]").classList.add("active");
 
@@ -12,12 +14,6 @@ let friends = {
     person: null,
     name: document.querySelector(".container .right .top .name"),
   };
-
-friends.all.forEach(function (f) {
-  f.addEventListener("mousedown", function () {
-    f.classList.contains("active") || setAciveChat(f);
-  });
-});
 
 // Opening of the modal on the list of connected users
 const openUsersModal = () => {
@@ -47,7 +43,7 @@ const setAciveChat = (f) => {
   chat.person = f.getAttribute("data-chat");
   chat.current.classList.remove("active-chat");
   chat.container
-    .querySelector('[data-chat="' + chat.person + '"]')
+    .querySelector(`[data-chat="${chat.person}"]`)
     .classList.add("active-chat");
   friends.name = f.querySelector(".name").innerText;
   chat.name.innerHTML = friends.name;
@@ -73,6 +69,7 @@ const closeModal = () => {
   document.body.classList.remove("modal-active");
 };
 
+// Update of active users
 const updateUsers = (users) => {
   listUsers.innerHTML = "";
   for (let i in users) {
@@ -82,9 +79,12 @@ const updateUsers = (users) => {
   let text = `Discussion générale (${users.length})`;
   friends.all[0].querySelector(".name").innerHTML = text;
   // same with the title of the general chat
-  if (chat.person == "person0" || chat.person == null)
+  if (chat.person === "person0" || chat.person === null)
     document.body.querySelector("#infoPersonTop").innerHTML = text;
 };
+
+// msg
+let globalChat = chat.container.querySelector(".chat[data-chat=person0]");
 
 // msg when a new user is connecting
 const messageNewUser = (newUsername) => {
@@ -94,11 +94,7 @@ const messageNewUser = (newUsername) => {
   chat.container.querySelector(".chat[data-chat=person0]").innerHTML += message;
 };
 
-// msg
-
-let globalChat = chat.container.querySelector(".chat[data-chat=person0]");
-
-// msg when a new user is connecting
+// msg when a  user is leaving
 const messageLeaveUser = (leaveUsername) => {
   let message = `<div class="conversation-start">
                   <span>${leaveUsername} a quitté le chat!</span>
@@ -130,7 +126,45 @@ const showSomeoneWriting = (usernameWriting) => {
   }
 };
 
-// Display info msg about writing
+// Remove info msg about writing
 const removeSomeoneWriting = () => {
   someoneWriting.classList.add("none");
+};
+
+// Messaging: Friends list + Chats
+
+// Display of users on login
+const setFriends = (users, socketIDs, personalUsername) => {
+  for (let i = 0; i < users.length; i++) {
+    if (personalUsername != users[i]) addUserChat(users[i], socketIDs[i]);
+  }
+};
+
+// Reloading links between friends and messaging
+const updateFriends = () => {
+  friends.all = document.querySelectorAll(".left .person");
+  friends.all.forEach((f) => {
+    f.addEventListener("mousedown", () => {
+      f.classList.contains("active") || setAciveChat(f);
+    });
+  });
+};
+updateFriends();
+
+// add user to private messaging
+const addUserChat = (newUserName, newSocketID) => {
+  // Friend
+  let element = `<li class="person" data-chat="${newSocketID}">
+                <span class="name">${newUserName}</span><br/>
+                <span class="preview">Message privé</span>
+              </li>`;
+  friends.list.insertAdjacentHTML("beforeend", element);
+
+  // Chats
+  element = `<div class="chat" data-chat="${newSocketID}"></div>`;
+  let lastChat = chat.container.querySelectorAll(".chat");
+  lastChat = lastChat[lastChat.length - 1]; // target last id
+  lastChat.insertAdjacentHTML("afterend", element);
+
+  updateFriends();
 };

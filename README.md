@@ -1,14 +1,26 @@
-# Socket I/O
+# NodeJS - Socket I/O - Chat
 
 *February 2021*
 
-> 🔨 From udemy '[Socket.IO : Créer une discussion instantanée de A à Z](https://www.udemy.com/course/socketio/)'.
+> 🔨 Chat application using SocketIO. From udemy '[Socket.IO : Créer une discussion instantanée de A à Z](https://www.udemy.com/course/socketio/)'.
 
 ![Node / Socket IO Logo](_readme-img/node-socket.png)
 
 Demo on [Heroku](https://raigyo-socket-chat.herokuapp.com/)
 
-## Concept covered
+![capture](_readme-img/capture-02.png)
+
+![capture](_readme-img/capture-03.png)
+
+## About
+
+Chat application using SocketIO.
+
+- Connexion in main room (Public discussion) with user name.
+- The main chat windows displays also when a user connects or disconnects, and lists of all the connected people.
+- Everybody who's connected has is own room so users can send private messages.
+- A message is displayed when someone is writing but only if the user is in the same room.
+
 
 
 ## Local version

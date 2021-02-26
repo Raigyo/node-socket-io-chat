@@ -7,11 +7,6 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const striptags = require("striptags");
 const config = require("./config");
-// Module dev
-const morgan;
-if (config.prod) {
-  morgan = require("morgan");
-}
 
 // Const
 // ---
@@ -33,10 +28,6 @@ app.use((req, res, next) => {
   console.log(`URL: ${req.path}`);
   next();
 });
-
-if (config.prod) {
-  app.use(morgan("dev"));
-}
 
 // middleware used to define static files directory
 app.use(require("express").static(options.root));

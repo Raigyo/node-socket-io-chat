@@ -5,9 +5,13 @@
 const app = require("express")();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const morgan = require("morgan");
 const striptags = require("striptags");
 const config = require("./config");
+// Module dev
+const morgan;
+if (config.prod) {
+  morgan = require("morgan");
+}
 
 // Const
 // ---
@@ -30,7 +34,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(morgan("dev"));
+if (config.prod) {
+  app.use(morgan("dev"));
+}
 
 // middleware used to define static files directory
 app.use(require("express").static(options.root));
@@ -146,16 +152,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Server launch
-// ---
-// app.listen(path, [callback]):
-// Starts a UNIX socket and listens for connections on the given path.
-// This method is identical to Node’s http.Server.listen().
-// To use Socket IO we need to replace app by server
-server.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
-});
-
 // Array with usernames without index
 
 const getUsernames = () => {
@@ -187,3 +183,13 @@ const getVariablesDataChat = (dataChat, socketID) => {
     dataChat: dataChat,
   };
 };
+
+// Server launch
+// ---
+// app.listen(path, [callback]):
+// Starts a UNIX socket and listens for connections on the given path.
+// This method is identical to Node’s http.Server.listen().
+// To use Socket IO we need to replace app by server
+server.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
+});

@@ -104,20 +104,28 @@ io.on("connection", (socket) => {
   });
 
   // Receive / broadcast a msg
-  socket.on("sendMessage", (text) => {
+  socket.on("sendMessage", (text, dataChat) => {
     text = striptags(text.trim());
     if (text !== "") {
-      socket.to("users").emit("newMessage", text, usernames[socket.id]); // send msg to room + sender name
-      socket.emit("confirmMessage", text); // send msg to sender to manage bubble class
+      let data = getVariablesDataChat(dataChat, socket.id);
+      socket
+        .to(data.roomToSend)
+        .emit("newMessage", text, usernames[socket.id], data.chatToShow);
+      // send msg to room + sender name + socket
+      socket.emit("confirmMessage", text, data.dataChat); // send msg to sender to manage bubble class
     }
   });
 
   // Informations about msg writing
-  socket.on("startWriting", () => {
-    socket.to("users").emit("userStartWriting", usernames[socket.id]);
+  socket.on("startWriting", (dataChat) => {
+    let data = getVariablesDataChat(dataChat, socket.id);
+    socket
+      .to(data.roomToSend)
+      .emit("userStartWriting", usernames[socket.id], data.chatToShow);
   });
-  socket.on("stopWriting", () => {
-    socket.to("users").emit("userStopWriting");
+  socket.on("stopWriting", (dataChat) => {
+    let data = getVariablesDataChat(dataChat, socket.id);
+    socket.to(data.roomToSend).emit("userStopWriting", data.chatToShow);
   });
 
   // User disconected
@@ -131,7 +139,9 @@ io.on("connection", (socket) => {
       let userLeaving = usernames[socket.id];
       delete usernames[socket.id];
       // we send a leaving message to all user and update the list of users in chat
-      socket.to("users").emit("leftUser", userLeaving, getUsernames());
+      socket
+        .to("users")
+        .emit("leftUser", socket.id, userLeaving, getUsernames());
     }
   });
 });
@@ -164,4 +174,16 @@ const getSocketIDs = () => {
     socketIDs.push(socketid);
   }
   return socketIDs;
+};
+
+// Send all var from DataChat
+const getVariablesDataChat = (dataChat, socketID) => {
+  dataChat = dataChat === null ? "person0" : dataChat;
+  return {
+    // send msg to target user (to)
+    roomToSend: dataChat === "person0" ? "users" : dataChat,
+    // chat/user in which the message has to be shown (from)
+    chatToShow: dataChat === "person0" ? dataChat : socketID,
+    dataChat: dataChat,
+  };
 };

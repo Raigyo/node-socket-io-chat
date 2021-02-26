@@ -91,7 +91,7 @@ const messageNewUser = (newUsername) => {
   let message = `<div class="conversation-start">
                   <span>${newUsername} a rejoint le chat!</span>
                 </div>`;
-  chat.container.querySelector(".chat[data-chat=person0]").innerHTML += message;
+  globalChat.insertAdjacentHTML("beforeend", message);
 };
 
 // msg when a  user is leaving
@@ -105,30 +105,46 @@ const messageLeaveUser = (leaveUsername) => {
 };
 
 // display msg of current user
-const showMyMessage = (text) => {
+const showMyMessage = (text, dataChat) => {
   let message = `<div class="bubble name me">${text}</div>`;
-  globalChat.insertAdjacentHTML("beforeend", message);
+  // console.log("dataChat:", dataChat);
+  chat.container
+    .querySelector(`.chat[data-chat="${dataChat}"]`)
+    .insertAdjacentHTML("beforeend", message);
 };
 
 // display msg of other users
-const showNewMessage = (text, usernameSender) => {
+const showNewMessage = (text, usernameSender, dataChat) => {
   let message = `<div class="bubble name you"><span class="username">${usernameSender}</span>${text}</div>`;
-  globalChat.insertAdjacentHTML("beforeend", message);
+  // globalChat.insertAdjacentHTML("beforeend", message);
+  chat.container
+    .querySelector(`.chat[data-chat="${dataChat}"]`)
+    .insertAdjacentHTML("beforeend", message);
 };
 
 // Writing information
 let someoneWriting = document.body.querySelector(".someoneWriting");
 // Display info msg about writing
-const showSomeoneWriting = (usernameWriting) => {
-  if (chat.person === "person0" || chat.person === null) {
+const showSomeoneWriting = (usernameWriting, dataChat) => {
+  console.log("chat.person: ", chat.person);
+  console.log("dataChat", dataChat, "---", usernameWriting);
+  if (
+    chat.person === dataChat ||
+    (dataChat === "person0" && chat.person === null)
+  ) {
     someoneWriting.innerHTML = `${usernameWriting} est en train d\'écrire...`;
     someoneWriting.classList.remove("none");
   }
 };
 
 // Remove info msg about writing
-const removeSomeoneWriting = () => {
-  someoneWriting.classList.add("none");
+const removeSomeoneWriting = (dataChat) => {
+  if (
+    chat.person === dataChat ||
+    (dataChat === "person0" && chat.person === null)
+  ) {
+    someoneWriting.classList.add("none");
+  }
 };
 
 // Messaging: Friends list + Chats
@@ -165,6 +181,23 @@ const addUserChat = (newUserName, newSocketID) => {
   let lastChat = chat.container.querySelectorAll(".chat");
   lastChat = lastChat[lastChat.length - 1]; // target last id
   lastChat.insertAdjacentHTML("afterend", element);
+
+  updateFriends();
+};
+
+// delete user from private messaging
+const removeUserChat = (oldSocketID) => {
+  // chain main chat window if needed
+  if (chat.person === oldSocketID) setAciveChat(friends.all[0]);
+  // delete friend from list
+  let element = friends.list.querySelector(
+    `.person[data-chat="${oldSocketID}"]`
+  );
+  element.parentNode.removeChild(element);
+  // because removeChild is one of the only way to remove an element with all browsers
+  // delete messaging
+  element = chat.container.querySelector(`.person[data-chat="${oldSocketID}"]`);
+  element.parentNode.removeChild(element);
 
   updateFriends();
 };

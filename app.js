@@ -185,4 +185,4 @@ const getVariablesDataChat = (dataChat, socketID) => {
 //   console.log(`App listening at http://localhost:${port}`);
 // });
 
-server.listen(port, () => console.log(`Listening on ${PORT}`));
+server.listen(PORT, () => console.log(`Listening on ${PORT}`));

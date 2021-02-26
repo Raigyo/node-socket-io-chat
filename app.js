@@ -7,10 +7,9 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const striptags = require("striptags");
 const config = require("./config");
-// const PORT = process.env.PORT || 3000;
 // Const
 // ---
-const port = config.express.port;
+const port = config.process.env.PORT || 3000;
 // Default path for sendFile
 const options = {
   root: __dirname + "/views", // __dirname: current directory
@@ -185,4 +184,4 @@ const getVariablesDataChat = (dataChat, socketID) => {
 //   console.log(`App listening at http://localhost:${port}`);
 // });
 
-server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+server.listen(port, () => console.log(`Listening on ${port}`));

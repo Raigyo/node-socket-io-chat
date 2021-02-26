@@ -7,7 +7,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const striptags = require("striptags");
 const config = require("./config");
-
+const PORT = process.env.PORT || 3000;
 // Const
 // ---
 const port = config.express.port;
@@ -181,6 +181,8 @@ const getVariablesDataChat = (dataChat, socketID) => {
 // Starts a UNIX socket and listens for connections on the given path.
 // This method is identical to Node’s http.Server.listen().
 // To use Socket IO we need to replace app by server
-server.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
-});
+// server.listen(port, () => {
+//   console.log(`App listening at http://localhost:${port}`);
+// });
+
+server.listen(port, () => console.log(`Listening on ${PORT}`));

@@ -6,9 +6,16 @@
 
 ![Node / Socket IO Logo](_readme-img/node-socket.png)
 
-Demo on [Heroku](https://raigyo-socket-chat.herokuapp.com/) (WIP!!!)
+Demo on [Heroku](https://raigyo-socket-chat.herokuapp.com/)
 
-// TODO "user xxx is writing" for all users
+## Concept covered
+
+
+## Local version
+
+- Use the local [version branch](https://github.com/Raigyo/node-socket-io-chat/tree/local-version)
+- `npm install`
+- `npm run start` || `nodemon app.js`
 
 ## Dependancies
 

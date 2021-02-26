@@ -10,7 +10,6 @@ const config = require("./config");
 const PORT = process.env.PORT || 3000;
 // Const
 // ---
-//const port = config.express.port;
 // Default path for sendFile
 const options = {
   root: __dirname + "/views", // __dirname: current directory

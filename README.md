@@ -8,7 +8,7 @@
 
 Demo on [Heroku](https://raigyo-socket-chat.herokuapp.com/) (WIP!!!)
 
-// TODO "user xxx is writing" for all users
+
 
 ## Dependancies
 

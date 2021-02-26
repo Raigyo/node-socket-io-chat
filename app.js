@@ -7,7 +7,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const striptags = require("striptags");
 const config = require("./config");
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 // Const
 // ---
 const port = config.express.port;
